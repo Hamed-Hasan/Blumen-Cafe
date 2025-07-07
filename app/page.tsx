@@ -14,6 +14,8 @@ import { OrdersList } from '@/components/orders/OrdersList';
 import { RecipesList } from '@/components/recipes/RecipesList';
 import { SuppliersList } from '@/components/suppliers/SuppliersList';
 import { BranchesList } from '@/components/branches/BranchesList';
+import { ProductionList } from '@/components/production/ProductionList';
+import { DistributionList } from '@/components/distribution/DistributionList';
 
 export default function Home() {
   const { user, isLoading } = useAuth();
@@ -58,6 +60,8 @@ export default function Home() {
       case 'products': return 'Manage your product catalog';
       case 'recipes': return 'Create and manage recipes';
       case 'inventory': return 'Track inventory across all locations';
+      case 'production': return 'Schedule and manage production plans';
+      case 'distribution': return 'Coordinate deliveries between locations';
       case 'suppliers': return 'Manage supplier relationships';
       case 'purchase-orders': return 'Manage orders and requests';
       case 'branches': return 'Monitor branch operations';
@@ -87,6 +91,22 @@ export default function Home() {
         return <RecipesList />;
       case 'inventory':
         return <InventoryList />;
+      case 'production':
+        return user.role === 'main_manager' ? (
+          <ProductionList />
+        ) : (
+          <div className="text-center py-8">
+            <p className="text-muted-foreground">Access denied. Only Main Managers can manage production.</p>
+          </div>
+        );
+      case 'distribution':
+        return user.role === 'main_manager' ? (
+          <DistributionList />
+        ) : (
+          <div className="text-center py-8">
+            <p className="text-muted-foreground">Access denied. Only Main Managers can manage distribution.</p>
+          </div>
+        );
       case 'suppliers':
         return user.role === 'main_manager' ? (
           <SuppliersList />
@@ -107,8 +127,6 @@ export default function Home() {
         );
       case 'alerts':
         return <AlertsList />;
-      case 'production':
-      case 'distribution':
       case 'reports':
       case 'settings':
         return (
